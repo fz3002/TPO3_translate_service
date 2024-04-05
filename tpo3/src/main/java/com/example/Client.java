@@ -43,13 +43,19 @@ public class Client {
 
     public static void main(String[] args) {
         Client client = new Client();
-        InetAddress address = InetAddress.getLocalHost();
         try{
-            client.connectToProxy(address.getHostAddress());
-            //TODO: gui for client
-            String message;
-            client.sendMessage(message);
-            client.disconnect();
+            InetAddress address = InetAddress.getLocalHost();
+            System.out.println(address.getHostAddress());
+            //TODO: server listening on port
+            //client.connectToProxy(address.getHostAddress());
+            new GUI();
+            System.out.println("test");
+            //String message = ""; //Temp until Gui impelmentaion
+            //client.sendMessage(message);
+            //client.disconnect();
+            
+        }catch(IOException e){
+            e.printStackTrace();
         }
     }
 
