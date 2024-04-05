@@ -48,10 +48,15 @@ public class Client {
             System.out.println(address.getHostAddress());
             //TODO: server listening on port
             //client.connectToProxy(address.getHostAddress());
-            new GUI();
-            System.out.println("test");
-            //String message = ""; //Temp until Gui impelmentaion
-            //client.sendMessage(message);
+            GUI gui = new GUI();
+            while(true){
+                if(gui.newInput){
+                    String[] userInput = gui.getUserInput();
+                    String message = "{" + userInput[0] + "," + userInput[1] + "," + listeningPort + "}";
+                    //client.sendMessage(message);
+                }
+            }
+            
             //client.disconnect();
             
         }catch(IOException e){
