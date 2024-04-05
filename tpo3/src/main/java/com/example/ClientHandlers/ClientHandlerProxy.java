@@ -1,14 +1,14 @@
-package com.example;
+package com.example.ClientHandlers;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
-public class ClientHandler implements Runnable{
+public class ClientHandlerProxy implements Runnable{
 
     private Socket clientSocket;
 
-    public ClientHandler(Socket clientSocket) {
+    public ClientHandlerProxy(Socket clientSocket) {
         this.clientSocket = clientSocket;
     }
 
