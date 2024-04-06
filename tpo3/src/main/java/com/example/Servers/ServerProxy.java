@@ -1,18 +1,15 @@
 package com.example.Servers;
-
-/**
- * Hello world!
- *
- */
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import com.example.ClientHandlers.ClientHandlerProxy;
+import com.example.Interfaces.Server;
 
-public class ServerProxy {
+public class ServerProxy implements Server{
 
     private ServerSocket serverSocket = null;
+    private static final int PORT = 1122;
 
 
     public ServerProxy(ServerSocket serverSocket) {
@@ -21,6 +18,7 @@ public class ServerProxy {
         serviceConnections();
     }
     
+    @Override
     public void serviceConnections() {
         while (true) {
             try (Socket clientSocket = serverSocket.accept()) {
@@ -29,6 +27,14 @@ public class ServerProxy {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void main(String[] args) {
+        try{
+            new ServerProxy(new ServerSocket(PORT));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

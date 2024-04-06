@@ -1,4 +1,4 @@
-package com.example;
+package com.example.Clients;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +10,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client {
+import com.example.GUI;
+import com.example.Interfaces.Client;
+
+public class MainClient implements Client {
 
     final static int listeningPort = 8080;
     final static int sendPort = 5454;
@@ -19,11 +22,11 @@ public class Client {
     private PrintWriter out;
     private BufferedReader in;
 
-    public Client(){
+    public MainClient(){
     }
 
-    public void connectToProxy(String host) throws UnknownHostException, IOException {
-        socket = new Socket(host , 1122);
+    public void connect(String host, int port) throws UnknownHostException, IOException {
+        socket = new Socket(host , port);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
         System.out.println("Connected to " + socket.getInetAddress());
@@ -42,7 +45,7 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        Client client = new Client();
+        MainClient client = new MainClient();
         try{
             InetAddress address = InetAddress.getLocalHost();
             System.out.println(address.getHostAddress());

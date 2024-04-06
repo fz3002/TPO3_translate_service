@@ -1,12 +1,18 @@
 package com.example.ClientHandlers;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientHandlerProxy implements Runnable{
 
     private Socket clientSocket;
+    private BufferedReader in;
+    private PrintWriter out;
+    private String[] reqReceived;
 
     public ClientHandlerProxy(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -14,11 +20,20 @@ public class ClientHandlerProxy implements Runnable{
 
     @Override
     public void run() {
-        try(InputStream input = clientSocket.getInputStream()){
-            byte[] buffer = new byte[20];
-            int bufferRead = input.read(buffer);
+        try{
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 
-            System.out.println(new String(buffer, 0, 20));
+            String messageReceived = in.readLine();
+            
+            if(!messageReceived.startsWith("{")&&!messageReceived.endsWith("}")){
+                out.println("Message formating error");
+                clientSocket.close();
+            }else{
+                messageReceived = messageReceived.substring(1, messageReceived.length() -1);
+                reqReceived = messageReceived.split(",");
+            }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }finally {
