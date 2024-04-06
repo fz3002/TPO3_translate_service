@@ -1,7 +1,9 @@
 package com.example;
 
+import java.util.Map;
+
 public interface DataRepository {
 
-    public void getData();
+    public <T, V> Map<T,V> getData();
 
 }

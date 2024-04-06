@@ -16,6 +16,7 @@ public class ClientHandlerProxy implements Runnable{
 
     public ClientHandlerProxy(Socket clientSocket) {
         this.clientSocket = clientSocket;
+
     }
 
     @Override
@@ -32,6 +33,7 @@ public class ClientHandlerProxy implements Runnable{
             }else{
                 messageReceived = messageReceived.substring(1, messageReceived.length() -1);
                 reqReceived = messageReceived.split(",");
+                //TODO: Finding exisiting servers and sending requests or returning error response
             }
 
         } catch (IOException e) {

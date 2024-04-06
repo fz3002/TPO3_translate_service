@@ -15,8 +15,8 @@ import com.example.Interfaces.Client;
 
 public class MainClient implements Client {
 
-    final static int listeningPort = 8080;
-    final static int sendPort = 5454;
+    final static int LISTENINGPORT = 8080;
+    final static int SENDPORT = 5454;
     private Socket socket;
     private ServerSocket serverSocket;
     private PrintWriter out;
@@ -50,12 +50,12 @@ public class MainClient implements Client {
             InetAddress address = InetAddress.getLocalHost();
             System.out.println(address.getHostAddress());
             //TODO: server listening on port
-            //client.connectToProxy(address.getHostAddress());
+            //client.connectToProxy(address.getHostAddress(), SENDPORT);
             GUI gui = new GUI();
             while(true){
                 if(gui.newInput){
                     String[] userInput = gui.getUserInput();
-                    String message = "{" + userInput[0] + "," + userInput[1] + "," + listeningPort + "}";
+                    String message = "{" + userInput[0] + "," + userInput[1] + "," + LISTENINGPORT + "}";
                     //client.sendMessage(message);
                 }
             }

@@ -15,8 +15,8 @@ public class LanguageDictionary implements DataRepository{
     }
     
     @Override
-    public void getData() {
-        //TODO Method to get data from file of given path and adding them to hash map
+    public Map<String, String> getData() {
+        return data;
     }
     
 }
