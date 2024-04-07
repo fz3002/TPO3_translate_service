@@ -2,6 +2,8 @@ package com.example.ClientHandlers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -25,8 +27,11 @@ public class ClientHandlerLangServer implements Runnable {
     @Override
     public void run() {
         try {
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+
             String mesReceived = in.readLine();
-            if(!mesReceived.startsWith("{") && !mesReceived.endsWith("}")){ //TODO: Change validation method
+            if(!mesReceived.startsWith("{") && !mesReceived.endsWith("}")){
                 out.println("Message formating error");
             }else {
                 mesReceived = mesReceived.substring(-1, mesReceived.length() - 1);

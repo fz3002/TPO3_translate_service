@@ -15,10 +15,10 @@ import javax.swing.SwingUtilities;
 
 public class GUI {
 
-    private String message;
-    private String languageCode;
+    private String message, languageCode, answer = "";
     private String[] userInput = new String[2];
     public Boolean newInput = false;
+    private JLabel labelAnswer = new JLabel("Answer: " + answer);
 
     public GUI() {
         SwingUtilities.invokeLater(() -> createGui());
@@ -40,6 +40,7 @@ public class GUI {
 
         JLabel labelLangCode = new JLabel("Enter language code");
         JLabel labelWord = new JLabel("Enter word to translate");
+        
         JTextField textField = new JTextField(80);
         JTextField textFieldLangCode = new JTextField(5);
         JButton button = new JButton("Submit");
@@ -59,7 +60,8 @@ public class GUI {
         upperPanel.add(textField);
         centralPanel.add(labelLangCode);
         centralPanel.add(textFieldLangCode);
-        lowerPanel.add(button);
+        centralPanel.add(button);
+        lowerPanel.add(labelAnswer);
 
         frame.add(upperPanel, BorderLayout.NORTH);
         frame.add(centralPanel, BorderLayout.CENTER);
@@ -73,5 +75,8 @@ public class GUI {
     public String[] getUserInput(){
         newInput = false;
         return userInput;
+    }
+    public void updateAnswer(String translated){
+        labelAnswer.setText(translated);
     }
 }

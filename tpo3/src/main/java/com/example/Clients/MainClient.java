@@ -12,7 +12,6 @@ import java.net.UnknownHostException;
 
 import com.example.GUI;
 import com.example.Interfaces.Client;
-import com.example.Interfaces.Server;
 import com.example.Servers.ListenerServer;
 
 public class MainClient implements Client {
@@ -52,14 +51,18 @@ public class MainClient implements Client {
             InetAddress address = InetAddress.getLocalHost();
             System.out.println(address.getHostAddress());
             GUI gui = new GUI();
-            Server server = new ListenerServer(new ServerSocket(LISTENINGPORT));
-            //client.connectToProxy(address.getHostAddress(), SENDPORT);
             while(true){
                 if(gui.newInput){
                     String[] userInput = gui.getUserInput();
                     String message = "{" + userInput[0] + "," + userInput[1] + "," + LISTENINGPORT + "}";
-                    //client.sendMessage(message);
+                    client.connect(address.getHostAddress(), SENDPORT);
+                    client.sendMessage(message);
+                    client.disconnect();
+                    ListenerServer server = new ListenerServer(new ServerSocket(LISTENINGPORT)); //Find a way not ot block waitning for responses, probably closing server
+                    String received = server.received.getValue();
+                    gui.updateAnswer(received);
                 }
+                
             }
             
             //client.disconnect();
