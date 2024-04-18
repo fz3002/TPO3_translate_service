@@ -3,7 +3,6 @@ package com.example.ClientHandlers;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -27,13 +26,13 @@ public class ClientHandlerLangServer implements Runnable {
     public void run() {
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
 
             String mesReceived = in.readLine();
             if (!mesReceived.startsWith("{") && !mesReceived.endsWith("}")) {
                 out.println("Message formating error");
             } else {
-                mesReceived = mesReceived.substring(-1, mesReceived.length() - 1);
+                mesReceived = mesReceived.substring(1, mesReceived.length() - 1);
                 req = mesReceived.split(",");
                 String translated = ld.get(req[0]);
                 LanguageServerResponseClient client = new LanguageServerResponseClient();

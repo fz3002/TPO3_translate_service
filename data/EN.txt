@@ -1,2 +1,2 @@
-{witam, test}
+{witam, welcome}
 {hej, hey}

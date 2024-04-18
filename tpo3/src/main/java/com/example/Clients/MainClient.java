@@ -84,6 +84,9 @@ public class MainClient implements Client {
             // Passes working default Language Servers to main server
             serverProxy.setLangServers(client.langServers);
 
+            ListenerServer server = new ListenerServer(new ServerSocket(LISTENINGPORT));
+            new Thread(server).start();
+
             InetAddress address = InetAddress.getLocalHost();
             System.out.println(address.getHostAddress());
 
@@ -91,17 +94,21 @@ public class MainClient implements Client {
             while (true) {
                 boolean sendReq = client.gui.newInputAvailable();
                 if (sendReq) {
+                    System.out.println("================================================================");
                     String[] userInput = client.gui.getUserInput();
                     String message = "{" + userInput[0] + "," + userInput[1] + "," + LISTENINGPORT + "}";
+                    System.out.println(message);
                     client.connect(address.getHostAddress(), SENDPORT);
                     client.sendMessage(message);
                     client.disconnect();
-                    ListenerServer server = new ListenerServer(new ServerSocket(LISTENINGPORT)); // Find a way not ot
-                                                                                                 // block waitning for
-                                                                                                 // responses, probably
-                                                                                                 // closing server
-                    String received = server.received.getValue();
-                    client.gui.updateAnswer(received);
+                    String receivedAnswer = server.received.getValue();
+                    while(receivedAnswer == null){
+                        receivedAnswer = server.received.getValue();
+                    } 
+                    System.out.println("received: " + receivedAnswer);
+                    client.gui.getLabel().setText("Answer: " + receivedAnswer);
+                    receivedAnswer = null;
+                    server.received.setValue(null);
                 }
             }
 

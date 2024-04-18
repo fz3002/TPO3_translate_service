@@ -49,12 +49,13 @@ public class ClientHandlerProxy implements Runnable {
                     reqReceived = messageReceived.split(",");
                     // TODO: Finding exisiting servers and sending requests or returning error
                     // response
+                    System.out.println(reqReceived[1]);
                     LanguageServer receivingServer = findLanguageServer(reqReceived[1]);
                     if (receivingServer != null) {
                         System.out.println("test");
                         ProxyServerRequestClient client = new ProxyServerRequestClient();
                         String messageToSend = "{" + reqReceived[0] + "," + clientSocket.getInetAddress().getHostAddress()
-                                + ", " + reqReceived[2] + "}";
+                                + "," + reqReceived[2] + "}";
                         client.connect(InetAddress.getLocalHost().getHostAddress(), receivingServer.getListeningPort());
                         client.sendMessage(messageToSend);
                         client.disconnect();
@@ -78,7 +79,8 @@ public class ClientHandlerProxy implements Runnable {
 
     private LanguageServer findLanguageServer(String language) {
         for (LanguageServer server : languages) {
-            if (server.getLanguageDictionaryLanguage() == language) {
+            //System.out.println(server.getLanguageDictionaryLanguage());
+            if (server.getLanguageDictionaryLanguage().equals(language)) {
                 return server;
             }
         }

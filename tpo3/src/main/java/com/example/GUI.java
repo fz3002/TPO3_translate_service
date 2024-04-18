@@ -18,7 +18,7 @@ public class GUI {
     private String answer = "";
     private String[] userInput = new String[2];
     volatile public Boolean newInput = false;
-    private JLabel labelAnswer = new JLabel("Answer: " + answer);
+    volatile private JLabel labelAnswer = new JLabel("Answer: " + answer);
 
     public GUI() {
         SwingUtilities.invokeLater(() -> createGui());
@@ -78,8 +78,8 @@ public class GUI {
         return userInput;
     }
 
-    public void updateAnswer(String translated) {
-        labelAnswer.setText(translated);
+    public JLabel getLabel(){
+        return labelAnswer;
     }
 
     public boolean newInputAvailable(){

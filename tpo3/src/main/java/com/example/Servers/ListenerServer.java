@@ -8,27 +8,31 @@ import com.example.ClientHandlers.ClientHandlerListener;
 import com.example.Interfaces.Server;
 import com.example.Wrappers.StringWrapper;
 
-public class ListenerServer implements Server {
+public class ListenerServer implements Server, Runnable {
 
     private ServerSocket serverSocket;
     public boolean newInput = false;
-    public StringWrapper received;
+    volatile public StringWrapper received = new StringWrapper();
 
     public ListenerServer(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
-
-        serviceConnections();
     }
 
     @Override
     public void serviceConnections() {
         while (true) {
-            try (Socket clientSocket = serverSocket.accept()) {
-                System.out.println("Connection established");
+            try {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Listening Server Connection established");
                 new Thread(new ClientHandlerListener(received, clientSocket)).start();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void run() {
+        serviceConnections();
     }
 }

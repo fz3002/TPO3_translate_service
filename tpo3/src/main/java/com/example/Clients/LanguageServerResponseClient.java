@@ -3,7 +3,6 @@ package com.example.Clients;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -20,7 +19,7 @@ public class LanguageServerResponseClient implements Client {
     public void connect(String host, int port) throws UnknownHostException, IOException {
         socket = new Socket(host, port);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+        out = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("Connected to " + socket.getInetAddress());
     }
 

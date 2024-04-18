@@ -21,8 +21,9 @@ public class LanguageServer implements Server, Runnable {
     @Override
     public void serviceConnections() {
         while (true) {
-            try (Socket clientSocket = serverSocket.accept()) {
-                System.out.println("Connection established");
+            try {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Language Connection established");
                 new Thread(new ClientHandlerLangServer(clientSocket, ld)).start();
             } catch (IOException e) {
                 e.printStackTrace();

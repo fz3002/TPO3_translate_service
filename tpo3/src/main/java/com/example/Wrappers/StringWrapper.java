@@ -1,7 +1,9 @@
 package com.example.Wrappers;
 
 public class StringWrapper {
-    String value;
+    private String value;
+
+    public StringWrapper() {}
 
     public StringWrapper(String value) {
         this.value = value;
