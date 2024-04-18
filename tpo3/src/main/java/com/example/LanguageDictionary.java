@@ -15,7 +15,7 @@ public class LanguageDictionary implements DataRepository {
 
     public LanguageDictionary(String pathToSource) {
         this.pathToSource = pathToSource;
-        this.languageCode = pathToSource.substring(pathToSource.length() - 7, pathToSource.length() - 4);
+        this.languageCode = pathToSource.substring(pathToSource.length() - 6, pathToSource.length() - 4);
         this.data = mapFile();
     }
 

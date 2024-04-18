@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -42,7 +41,7 @@ public class MainClient implements Client {
     public void connect(String host, int port) throws UnknownHostException, IOException {
         socket = new Socket(host, port);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+        out = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("Connected to " + socket.getInetAddress());
     }
 
@@ -66,7 +65,7 @@ public class MainClient implements Client {
             langServers.add(new LanguageServer(new ServerSocket(currentLangServerPort++), new LanguageDictionary(file.getAbsolutePath())));
         }
         for (LanguageServer languageServer : langServers) {
-            new Thread(languageServer).start();
+            new Thread(languageServer, "Language Server " + languageServer.getLanguageDictionaryLanguage()).start();
         }
     }
 
@@ -77,7 +76,7 @@ public class MainClient implements Client {
         try {
             // starts Main server
             ServerProxy serverProxy = new ServerProxy(new ServerSocket(SENDPORT));
-            new Thread(serverProxy).start();
+            new Thread(serverProxy, "ServerProxyThread").start();
 
             // Starts Default Language Servers
             client.createDefaultLanguageServers();

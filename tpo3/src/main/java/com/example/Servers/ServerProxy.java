@@ -23,7 +23,7 @@ public class ServerProxy implements Server, Runnable {
             try {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Connection established");
-                new Thread(new ClientHandlerProxy(clientSocket, langServers)).start();
+                new Thread(new ClientHandlerProxy(clientSocket, langServers), "Client Handler Thread Server Proxy").start();
             } catch (IOException e) {
                 e.printStackTrace();
             }

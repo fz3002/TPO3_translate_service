@@ -39,7 +39,6 @@ public class ClientHandlerProxy implements Runnable {
         System.out.println("Client Handler Started");
         try {
             for (String messageReceived; (messageReceived = in.readLine()) != null; ){
-                System.out.println("test");
                 System.out.println(messageReceived);
                 if (!messageReceived.startsWith("{") && !messageReceived.endsWith("}")) {
                     out.println("Message formating error");
@@ -52,6 +51,7 @@ public class ClientHandlerProxy implements Runnable {
                     // response
                     LanguageServer receivingServer = findLanguageServer(reqReceived[1]);
                     if (receivingServer != null) {
+                        System.out.println("test");
                         ProxyServerRequestClient client = new ProxyServerRequestClient();
                         String messageToSend = "{" + reqReceived[0] + "," + clientSocket.getInetAddress().getHostAddress()
                                 + ", " + reqReceived[2] + "}";
@@ -63,7 +63,6 @@ public class ClientHandlerProxy implements Runnable {
                     }
                 }
             }
-            System.out.println("test after for");
 
         } catch (IOException e) {
             throw new RuntimeException(e);
