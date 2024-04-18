@@ -15,7 +15,7 @@ import javax.swing.SwingUtilities;
 
 public class GUI {
 
-    private String message, languageCode, answer = "";
+    private String answer = "";
     private String[] userInput = new String[2];
     public Boolean newInput = false;
     private JLabel labelAnswer = new JLabel("Answer: " + answer);

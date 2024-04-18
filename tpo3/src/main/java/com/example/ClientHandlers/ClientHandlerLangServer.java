@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 
 import com.example.LanguageDictionary;
@@ -36,9 +35,9 @@ public class ClientHandlerLangServer implements Runnable {
             } else {
                 mesReceived = mesReceived.substring(-1, mesReceived.length() - 1);
                 req = mesReceived.split(",");
-                String translated = ld.getData().get(req[0]);
+                String translated = ld.get(req[0]);
                 LanguageServerResponseClient client = new LanguageServerResponseClient();
-                client.connect(InetAddress.getLocalHost().getHostAddress(), Integer.parseInt(req[1]));
+                client.connect(req[1], Integer.parseInt(req[2]));
                 client.sendMessage(translated);
                 client.disconnect();
             }
