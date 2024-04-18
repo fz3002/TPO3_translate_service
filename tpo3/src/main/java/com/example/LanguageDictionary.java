@@ -15,7 +15,7 @@ public class LanguageDictionary implements DataRepository {
 
     public LanguageDictionary(String pathToSource) {
         this.pathToSource = pathToSource;
-        this.languageCode = pathToSource.substring(pathToSource.length() - 7, pathToSource.length() - 5);
+        this.languageCode = pathToSource.substring(pathToSource.length() - 7, pathToSource.length() - 4);
         this.data = mapFile();
     }
 
@@ -34,7 +34,7 @@ public class LanguageDictionary implements DataRepository {
 
     private Map<String, String> mapFile() {
         try (Stream<String> lines = Files.lines(Paths.get(pathToSource))) {
-            return lines.map(line -> line.split(":", 2))
+            return lines.map(line -> line.substring(1,line.length()-1).split(",", 2))
                     .filter(parts -> parts.length == 2)
                     .collect(Collectors.toMap(
                             parts -> parts[0].trim(),

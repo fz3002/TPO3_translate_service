@@ -20,7 +20,8 @@ public class ServerProxy implements Server, Runnable {
     @Override
     public void serviceConnections() {
         while (true) {
-            try (Socket clientSocket = serverSocket.accept()) {
+            try {
+                Socket clientSocket = serverSocket.accept();
                 System.out.println("Connection established");
                 new Thread(new ClientHandlerProxy(clientSocket, langServers)).start();
             } catch (IOException e) {

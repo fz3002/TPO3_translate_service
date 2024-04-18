@@ -24,7 +24,8 @@ public class MainClient implements Client {
 
     final static int LISTENINGPORT = 8080;
     final static int SENDPORT = 5454;
-    final static int SERVERPROXY_LISTENINGPORT = 1122;
+    
+    private static int currentLangServerPort = 2137;
 
     private final String PATH_TO_DATA = System.getProperty("user.dir") + "/data";
 
@@ -48,7 +49,7 @@ public class MainClient implements Client {
     public void sendMessage(String message) throws IOException {
         out.println(message);
         String response = in.readLine();
-        System.out.println(response);
+        System.out.println("Response: " + response);
     }
 
     public void disconnect() throws IOException {
@@ -59,9 +60,10 @@ public class MainClient implements Client {
 
     private void createDefaultLanguageServers() throws IOException {
         File dataDir = new File(PATH_TO_DATA);
+        System.out.println(dataDir.getAbsolutePath());
         File[] files = dataDir.listFiles();
         for (File file : files) {
-            langServers.add(new LanguageServer(new ServerSocket(), new LanguageDictionary(file.getAbsolutePath())));
+            langServers.add(new LanguageServer(new ServerSocket(currentLangServerPort++), new LanguageDictionary(file.getAbsolutePath())));
         }
         for (LanguageServer languageServer : langServers) {
             new Thread(languageServer).start();
@@ -74,7 +76,7 @@ public class MainClient implements Client {
 
         try {
             // starts Main server
-            ServerProxy serverProxy = new ServerProxy(new ServerSocket(SERVERPROXY_LISTENINGPORT));
+            ServerProxy serverProxy = new ServerProxy(new ServerSocket(SENDPORT));
             new Thread(serverProxy).start();
 
             // Starts Default Language Servers
@@ -88,7 +90,8 @@ public class MainClient implements Client {
 
             // Sending Request and showing answer
             while (true) {
-                if (client.gui.newInput) {
+                boolean sendReq = client.gui.newInputAvailable();
+                if (sendReq) {
                     String[] userInput = client.gui.getUserInput();
                     String message = "{" + userInput[0] + "," + userInput[1] + "," + LISTENINGPORT + "}";
                     client.connect(address.getHostAddress(), SENDPORT);

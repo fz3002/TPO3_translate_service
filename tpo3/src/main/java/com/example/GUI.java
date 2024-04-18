@@ -17,7 +17,7 @@ public class GUI {
 
     private String answer = "";
     private String[] userInput = new String[2];
-    public Boolean newInput = false;
+    volatile public Boolean newInput = false;
     private JLabel labelAnswer = new JLabel("Answer: " + answer);
 
     public GUI() {
@@ -49,6 +49,7 @@ public class GUI {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                //System.out.println("test");
                 newInput = true;
                 userInput[0] = textField.getText();
                 userInput[1] = textFieldLangCode.getText();
@@ -79,5 +80,9 @@ public class GUI {
 
     public void updateAnswer(String translated) {
         labelAnswer.setText(translated);
+    }
+
+    public boolean newInputAvailable(){
+        return newInput;
     }
 }
