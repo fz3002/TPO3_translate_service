@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -19,13 +20,13 @@ public class GUI {
     private String[] userInput = new String[2];
     volatile public Boolean newInput = false;
     volatile private JLabel labelAnswer = new JLabel("Answer: " + answer);
+    final JFrame frame = new JFrame();
 
     public GUI() {
         SwingUtilities.invokeLater(() -> createGui());
     }
 
     protected void createGui() {
-        JFrame frame = new JFrame();
         frame.setTitle("Tranlator Client");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
@@ -84,5 +85,9 @@ public class GUI {
 
     public boolean newInputAvailable(){
         return newInput;
+    }
+
+    public void raiseError(String errorMessage){
+        JOptionPane.showMessageDialog(frame, errorMessage);
     }
 }

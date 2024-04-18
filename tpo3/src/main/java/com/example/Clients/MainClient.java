@@ -23,7 +23,7 @@ public class MainClient implements Client {
 
     final static int LISTENINGPORT = 8080;
     final static int SENDPORT = 5454;
-    
+
     private static int currentLangServerPort = 2137;
 
     private final String PATH_TO_DATA = System.getProperty("user.dir") + "/data";
@@ -32,6 +32,7 @@ public class MainClient implements Client {
     private PrintWriter out;
     private BufferedReader in;
     private List<LanguageServer> langServers = new ArrayList<>();
+    private String responseFromProxyServer;
     public GUI gui;
 
     public MainClient() {
@@ -47,8 +48,7 @@ public class MainClient implements Client {
 
     public void sendMessage(String message) throws IOException {
         out.println(message);
-        String response = in.readLine();
-        System.out.println("Response: " + response);
+        this.responseFromProxyServer = in.readLine();
     }
 
     public void disconnect() throws IOException {
@@ -62,7 +62,8 @@ public class MainClient implements Client {
         System.out.println(dataDir.getAbsolutePath());
         File[] files = dataDir.listFiles();
         for (File file : files) {
-            langServers.add(new LanguageServer(new ServerSocket(currentLangServerPort++), new LanguageDictionary(file.getAbsolutePath())));
+            langServers.add(new LanguageServer(new ServerSocket(currentLangServerPort++),
+                    new LanguageDictionary(file.getAbsolutePath())));
         }
         for (LanguageServer languageServer : langServers) {
             new Thread(languageServer, "Language Server " + languageServer.getLanguageDictionaryLanguage()).start();
@@ -99,12 +100,20 @@ public class MainClient implements Client {
                     String message = "{" + userInput[0] + "," + userInput[1] + "," + LISTENINGPORT + "}";
                     System.out.println(message);
                     client.connect(address.getHostAddress(), SENDPORT);
+                    // TODO: Add timeout handling
                     client.sendMessage(message);
+                    System.out.println(client.responseFromProxyServer);
+                    if (client.responseFromProxyServer.startsWith("ERROR")) {
+                        client.gui.raiseError(client.responseFromProxyServer);
+                        client.disconnect();
+                        continue;
+                    }
                     client.disconnect();
                     String receivedAnswer = server.received.getValue();
-                    while(receivedAnswer == null){
+                    System.out.println(receivedAnswer);
+                    while (receivedAnswer == null) {
                         receivedAnswer = server.received.getValue();
-                    } 
+                    }
                     System.out.println("received: " + receivedAnswer);
                     client.gui.getLabel().setText("Answer: " + receivedAnswer);
                     receivedAnswer = null;

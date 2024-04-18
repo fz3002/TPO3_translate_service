@@ -44,11 +44,8 @@ public class ClientHandlerProxy implements Runnable {
                     out.println("Message formating error");
                     clientSocket.close();
                 } else {
-                    out.println("Success");
                     messageReceived = messageReceived.substring(1, messageReceived.length() - 1);
                     reqReceived = messageReceived.split(",");
-                    // TODO: Finding exisiting servers and sending requests or returning error
-                    // response
                     System.out.println(reqReceived[1]);
                     LanguageServer receivingServer = findLanguageServer(reqReceived[1]);
                     if (receivingServer != null) {
@@ -59,8 +56,9 @@ public class ClientHandlerProxy implements Runnable {
                         client.connect(InetAddress.getLocalHost().getHostAddress(), receivingServer.getListeningPort());
                         client.sendMessage(messageToSend);
                         client.disconnect();
+                        out.println("SUCCESS");
                     }else{
-                        // TODO: Handling not finding server with given language
+                        out.println("ERROR no such dictionary");
                     }
                 }
             }
