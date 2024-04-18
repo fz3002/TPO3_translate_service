@@ -98,9 +98,10 @@ public class MainClient implements Client {
                     System.out.println("================================================================");
                     String[] userInput = client.gui.getUserInput();
                     String message = "{" + userInput[0] + "," + userInput[1] + "," + LISTENINGPORT + "}";
-                    System.out.println(message);
                     client.connect(address.getHostAddress(), SENDPORT);
                     // TODO: Add timeout handling
+                    // TODO: Add feature adding new langugae server in gui
+                    // TODO: Chceck for errors in messeges
                     client.sendMessage(message);
                     System.out.println(client.responseFromProxyServer);
                     if (client.responseFromProxyServer.startsWith("ERROR")) {
@@ -110,11 +111,16 @@ public class MainClient implements Client {
                     }
                     client.disconnect();
                     String receivedAnswer = server.received.getValue();
-                    System.out.println(receivedAnswer);
                     while (receivedAnswer == null) {
                         receivedAnswer = server.received.getValue();
                     }
                     System.out.println("received: " + receivedAnswer);
+                    if (receivedAnswer.startsWith("ERROR")) {
+                        client.gui.raiseError(receivedAnswer);
+                        receivedAnswer = null;
+                        server.received.setValue(null);
+                        continue;
+                    }
                     client.gui.getLabel().setText("Answer: " + receivedAnswer);
                     receivedAnswer = null;
                     server.received.setValue(null);

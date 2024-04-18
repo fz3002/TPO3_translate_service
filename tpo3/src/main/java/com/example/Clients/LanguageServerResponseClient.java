@@ -27,7 +27,6 @@ public class LanguageServerResponseClient implements Client {
     public void sendMessage(String message) throws IOException {
         out.println(message);
         String response = in.readLine();
-        System.out.println(response);
     }
 
     @Override

@@ -50,10 +50,9 @@ public class GUI {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                //System.out.println("test");
                 newInput = true;
-                userInput[0] = textField.getText();
-                userInput[1] = textFieldLangCode.getText();
+                userInput[0] = textField.getText().toLowerCase();
+                userInput[1] = textFieldLangCode.getText().toUpperCase();
             }
 
         });
@@ -79,15 +78,15 @@ public class GUI {
         return userInput;
     }
 
-    public JLabel getLabel(){
+    public JLabel getLabel() {
         return labelAnswer;
     }
 
-    public boolean newInputAvailable(){
+    public boolean newInputAvailable() {
         return newInput;
     }
 
-    public void raiseError(String errorMessage){
+    public void raiseError(String errorMessage) {
         JOptionPane.showMessageDialog(frame, errorMessage);
     }
 }

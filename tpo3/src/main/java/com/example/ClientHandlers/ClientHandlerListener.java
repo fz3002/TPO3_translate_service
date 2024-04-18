@@ -24,9 +24,10 @@ public class ClientHandlerListener implements Runnable {
             out = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
             e.printStackTrace();
-            try{
+            try {
                 this.socket.close();
-            }catch (Exception e1){ }
+            } catch (Exception e1) {
+            }
         }
     }
 
