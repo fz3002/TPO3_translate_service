@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 
 import com.example.Interfaces.Client;
 
-public class LanguageServerResponseClient implements Client {
+public class ProxyServerRequestClient implements Client {
 
     private Socket socket;
     private BufferedReader in;

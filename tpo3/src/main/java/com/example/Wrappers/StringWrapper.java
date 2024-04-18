@@ -3,7 +3,6 @@ package com.example.Wrappers;
 public class StringWrapper {
     String value;
 
-
     public StringWrapper(String value) {
         this.value = value;
     }
@@ -15,5 +14,5 @@ public class StringWrapper {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
 }

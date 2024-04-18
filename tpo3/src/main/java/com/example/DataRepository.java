@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface DataRepository {
 
-    public <T, V> Map<T,V> getData();
+    public <T, V> Map<T, V> getData();
 
 }

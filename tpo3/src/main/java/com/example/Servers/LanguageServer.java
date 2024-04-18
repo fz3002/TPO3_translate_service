@@ -8,14 +8,12 @@ import com.example.LanguageDictionary;
 import com.example.ClientHandlers.ClientHandlerLangServer;
 import com.example.Interfaces.Server;
 
-public class LanguageServer implements Server{
+public class LanguageServer implements Server, Runnable {
     private LanguageDictionary ld = null;
     private ServerSocket serverSocket = null;
 
     public LanguageServer(ServerSocket serverSocket, LanguageDictionary ld) {
         this.ld = ld;
-
-        serviceConnections();
     }
 
     @Override
@@ -30,14 +28,16 @@ public class LanguageServer implements Server{
         }
     }
 
-    public static void main(String[] args) {
-        
-        try {
-            String path = args[0];
-            //TODO: validate path
-            new LanguageServer(new ServerSocket(), new LanguageDictionary(path));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void run() {
+        serviceConnections();
+    }
+
+    public String getLanguageDictionaryLanguage() {
+        return ld.languageCode;
+    }
+
+    public int getListeningPort() {
+        return serverSocket.getLocalPort();
     }
 }

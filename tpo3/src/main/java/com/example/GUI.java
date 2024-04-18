@@ -40,7 +40,7 @@ public class GUI {
 
         JLabel labelLangCode = new JLabel("Enter language code");
         JLabel labelWord = new JLabel("Enter word to translate");
-        
+
         JTextField textField = new JTextField(80);
         JTextField textFieldLangCode = new JTextField(5);
         JButton button = new JButton("Submit");
@@ -53,7 +53,7 @@ public class GUI {
                 userInput[0] = textField.getText();
                 userInput[1] = textFieldLangCode.getText();
             }
-            
+
         });
 
         upperPanel.add(labelWord);
@@ -72,11 +72,12 @@ public class GUI {
         frame.setVisible(true);
     }
 
-    public String[] getUserInput(){
+    public String[] getUserInput() {
         newInput = false;
         return userInput;
     }
-    public void updateAnswer(String translated){
+
+    public void updateAnswer(String translated) {
         labelAnswer.setText(translated);
     }
 }

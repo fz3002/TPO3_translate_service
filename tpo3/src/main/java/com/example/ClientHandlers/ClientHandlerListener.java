@@ -9,7 +9,7 @@ import java.net.Socket;
 
 import com.example.Wrappers.StringWrapper;
 
-public class ClientHandlerListener implements Runnable{
+public class ClientHandlerListener implements Runnable {
 
     private Socket socket;
     private BufferedReader in;
@@ -32,6 +32,6 @@ public class ClientHandlerListener implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-           
+
     }
 }

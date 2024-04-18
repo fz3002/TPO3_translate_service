@@ -31,9 +31,9 @@ public class ClientHandlerLangServer implements Runnable {
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 
             String mesReceived = in.readLine();
-            if(!mesReceived.startsWith("{") && !mesReceived.endsWith("}")){
+            if (!mesReceived.startsWith("{") && !mesReceived.endsWith("}")) {
                 out.println("Message formating error");
-            }else {
+            } else {
                 mesReceived = mesReceived.substring(-1, mesReceived.length() - 1);
                 req = mesReceived.split(",");
                 String translated = ld.getData().get(req[0]);
@@ -42,11 +42,10 @@ public class ClientHandlerLangServer implements Runnable {
                 client.sendMessage(translated);
                 client.disconnect();
             }
-            
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
 }
