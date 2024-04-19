@@ -29,10 +29,11 @@ public class ClientHandlerLangServer implements Runnable {
             out = new PrintWriter(socket.getOutputStream(), true);
 
             String mesReceived = in.readLine();
-            System.out.println(mesReceived);
+            System.out.println("Message Received (Language Server): " + mesReceived);
             if (!mesReceived.startsWith("{") && !mesReceived.endsWith("}")) {
                 out.println("Message formating error");
             } else {
+                out.println("SUCCESS");
                 mesReceived = mesReceived.substring(1, mesReceived.length() - 1);
                 req = mesReceived.split(",");
                 String translated = ld.get(req[0]);

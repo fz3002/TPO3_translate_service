@@ -47,7 +47,7 @@ public class ClientHandlerProxy implements Runnable {
 
             for (String messageReceived; (messageReceived = in.readLine()) != null;) {
 
-                System.out.println(messageReceived);
+                System.out.println("Message Received (Server Proxy): " + messageReceived);
 
                 if ((!messageReceived.startsWith("{") || !messageReceived.endsWith("}"))
                         && !messageReceived.startsWith("CREATE")) {
