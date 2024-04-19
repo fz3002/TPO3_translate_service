@@ -18,6 +18,8 @@ public class ListenerServer implements Server, Runnable {
         this.serverSocket = serverSocket;
     }
 
+    public ListenerServer() {}
+
     @Override
     public void serviceConnections() {
         while (true) {
@@ -34,5 +36,13 @@ public class ListenerServer implements Server, Runnable {
     @Override
     public void run() {
         serviceConnections();
+    }
+
+    public ServerSocket getServerSocket() {
+        return this.serverSocket;
+    }
+
+    public void setSocket(ServerSocket serverSocket){
+        this.serverSocket = serverSocket;
     }
 }
