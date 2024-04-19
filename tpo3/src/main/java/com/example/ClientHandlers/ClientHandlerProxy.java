@@ -76,8 +76,9 @@ public class ClientHandlerProxy implements Runnable {
     }
 
     private LanguageServer findLanguageServer(String language) {
+        System.out.println("test find language server");
         for (LanguageServer server : languages) {
-            // System.out.println(server.getLanguageDictionaryLanguage());
+            System.out.println(server.getLanguageDictionaryLanguage());
             if (server.getLanguageDictionaryLanguage().equals(language)) {
                 return server;
             }
