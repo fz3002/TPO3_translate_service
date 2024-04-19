@@ -29,6 +29,7 @@ public class ClientHandlerLangServer implements Runnable {
             out = new PrintWriter(socket.getOutputStream(), true);
 
             String mesReceived = in.readLine();
+            System.out.println(mesReceived);
             if (!mesReceived.startsWith("{") && !mesReceived.endsWith("}")) {
                 out.println("Message formating error");
             } else {

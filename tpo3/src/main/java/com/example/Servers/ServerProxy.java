@@ -58,6 +58,14 @@ public class ServerProxy implements Server {
         }
     }
 
+    public static int getCurrentLangServerPort() {
+        return currentLangServerPort;
+    }
+
+    public static void incrementCurrentLangServerPort(){
+        currentLangServerPort++;
+    }
+
     public static void main(String args[]) {
         ServerProxy proxy;
         try {

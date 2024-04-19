@@ -10,7 +10,7 @@ import com.example.Wrappers.StringWrapper;
 
 public class ListenerServer implements Server, Runnable {
 
-    private ServerSocket serverSocket;
+    volatile private ServerSocket serverSocket;
     public boolean newInput = false;
     volatile public StringWrapper received = new StringWrapper();
 
@@ -18,17 +18,34 @@ public class ListenerServer implements Server, Runnable {
         this.serverSocket = serverSocket;
     }
 
-    public ListenerServer() {}
+    public ListenerServer() {
+    }
 
     @Override
     public void serviceConnections() {
         while (true) {
-            try {
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Listening Server Connection established");
-                new Thread(new ClientHandlerListener(received, clientSocket)).start();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                try {
+                    Socket clientSocket = serverSocket.accept();
+                    System.out.println("Listening Server Connection established");
+                    ClientHandlerListener clientHandler = new ClientHandlerListener(received, clientSocket);
+                    try {
+                        String received = clientHandler.in.readLine();
+                        clientHandler.translated.setValue(received);
+                        clientHandler.out.println("ACK");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        serverSocket.close();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
@@ -38,11 +55,11 @@ public class ListenerServer implements Server, Runnable {
         serviceConnections();
     }
 
-    public ServerSocket getServerSocket() {
+    public synchronized ServerSocket getServerSocket() {
         return this.serverSocket;
     }
 
-    public void setSocket(ServerSocket serverSocket){
+    public synchronized void setSocket(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
 }

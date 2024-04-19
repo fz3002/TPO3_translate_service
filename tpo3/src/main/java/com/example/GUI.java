@@ -23,8 +23,9 @@ public class GUI {
 
     private String answer = "";
     private String[] userInput = new String[2];
-    volatile public Boolean newInput = false;
+    volatile public Boolean newInput = false, newServerCreationRequest = false;
     volatile private JLabel labelAnswer = new JLabel("Answer: " + answer);
+    volatile private String pathToSource;
     final JFrame frame = new JFrame();
 
     public GUI() {
@@ -64,7 +65,8 @@ public class GUI {
 
                 int option = JOptionPane.showConfirmDialog(null, panel, "Add Server", JOptionPane.OK_CANCEL_OPTION);
                 if (option == JOptionPane.OK_OPTION) {
-                    String filePath = textField.getText();
+                    pathToSource = textField.getText();
+                    newServerCreationRequest = true;
                 }
             }
         });
@@ -129,7 +131,14 @@ public class GUI {
         return newInput;
     }
 
-    public void raiseError(String errorMessage) {
+    public void showPopUp(String errorMessage) {
         JOptionPane.showMessageDialog(frame, errorMessage);
+    }
+
+    public String getPathToSource(){
+        newServerCreationRequest = false;
+        String pathToSourceVal = pathToSource;
+        pathToSource = null;
+        return pathToSourceVal;
     }
 }

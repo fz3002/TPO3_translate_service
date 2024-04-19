@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 
+import com.example.LanguageDictionary;
 import com.example.Clients.ProxyServerRequestClient;
 import com.example.Servers.LanguageServer;
+import com.example.Servers.ServerProxy;
 
 public class ClientHandlerProxy implements Runnable {
 
@@ -40,10 +43,11 @@ public class ClientHandlerProxy implements Runnable {
         System.out.println("Client Handler Started");
         try {
             for (String messageReceived; (messageReceived = in.readLine()) != null;) {
-                if (!messageReceived.startsWith("{") && !messageReceived.endsWith("}")) {
+                System.out.println(messageReceived);
+                if ((!messageReceived.startsWith("{") || !messageReceived.endsWith("}")) && !messageReceived.startsWith("CREATE")) {
                     out.println("Message formating error");
                     clientSocket.close();
-                } else {
+                } else if(messageReceived.startsWith("{") && messageReceived.endsWith("}")){
                     messageReceived = messageReceived.substring(1, messageReceived.length() - 1);
                     reqReceived = messageReceived.split(",");
                     LanguageServer receivingServer = findLanguageServer(reqReceived[1]);
@@ -60,6 +64,11 @@ public class ClientHandlerProxy implements Runnable {
                     } else {
                         out.println("ERROR no such dictionary");
                     }
+                }else{
+                    String pathToSource = messageReceived.substring(messageReceived.lastIndexOf("CREATE ", 0), messageReceived.length());
+                    int port = ServerProxy.getCurrentLangServerPort();
+                    languages.add(new LanguageServer(new ServerSocket(port++), new LanguageDictionary(pathToSource)));
+                    ServerProxy.incrementCurrentLangServerPort();
                 }
             }
 

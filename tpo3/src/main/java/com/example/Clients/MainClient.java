@@ -8,7 +8,11 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.example.GUI;
 import com.example.Interfaces.Client;
@@ -47,17 +51,31 @@ public class MainClient implements Client {
         socket.close();
     }
 
-    
+    public boolean validateSource(String path) {
+
+        Pattern pattern = Pattern.compile("\\{\\w+, \\w+\\}");
+        Boolean linesMatch = false;
+        if (!path.endsWith(".txt") && path.substring(path.lastIndexOf('/'), path.length() - 1).length() == 6)
+            return false;
+        try {
+            linesMatch = Files
+                    .lines(Paths.get(path))
+                    .allMatch(line -> {
+                        Matcher matcher = pattern.matcher(line);
+                        return matcher.matches();
+                    });
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return linesMatch;
+    }
 
     public static void main(String[] args) {
 
         MainClient client = new MainClient();
 
         try {
-            
-
-            ListenerServer server = new ListenerServer();
-            new Thread(server).start();
 
             InetAddress address = InetAddress.getLocalHost();
             System.out.println(address.getHostAddress());
@@ -71,10 +89,14 @@ public class MainClient implements Client {
 
                 if (sendReq) {
 
-                    
+                    ListenerServer server = new ListenerServer();
+                    new Thread(server).start();
+
                     int LISTENINGPORT = random.nextInt(1025,65535);
 
-                    server.setSocket(new ServerSocket(LISTENINGPORT));
+                    ServerSocket serverSocket = new ServerSocket(LISTENINGPORT);
+
+                    server.setSocket(serverSocket);
 
                     System.out.println("================================================================");
                     
@@ -90,7 +112,7 @@ public class MainClient implements Client {
                     System.out.println(client.responseFromProxyServer);
 
                     if (client.responseFromProxyServer.startsWith("ERROR")) { // Handle error from server proxy
-                        client.gui.raiseError(client.responseFromProxyServer);
+                        client.gui.showPopUp(client.responseFromProxyServer);
                         client.disconnect();
                         continue;
                     }
@@ -105,7 +127,7 @@ public class MainClient implements Client {
                     }
                     System.out.println("received: " + receivedAnswer);
                     if (receivedAnswer.startsWith("ERROR")) { // Handling error from server proxy
-                        client.gui.raiseError(receivedAnswer);
+                        client.gui.showPopUp(receivedAnswer);
                         receivedAnswer = null;
                         server.received.setValue(null);
                         continue;
@@ -114,19 +136,30 @@ public class MainClient implements Client {
                     client.gui.getLabel().setText("Answer: " + receivedAnswer); //Displaying answer
                     receivedAnswer = null;
                     server.received.setValue(null);
-                    server.getServerSocket().close();
+                    server.setSocket(null);
+                    
                 }
 
                 // ADD NEW SERVER REQUEST
                 // TODO
-                
+                if (client.gui.newServerCreationRequest){
+                    System.out.println("test add new server request");
+                    String pathToSource = client.gui.getPathToSource();
+                    if (client.validateSource(pathToSource)){
+                        client.connect(address.getHostAddress(), SENDPORT);
+                        client.sendMessage(new String("CREATE, " + pathToSource));
+                        client.gui.showPopUp(client.responseFromProxyServer);
+                        client.disconnect();
+
+                    }else {
+                        client.gui.showPopUp("File is not a valid source for new Language Server");
+                    }
+                }
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
 
 }
