@@ -40,35 +40,57 @@ public class ClientHandlerProxy implements Runnable {
 
     @Override
     public void run() {
+
         System.out.println("Client Handler Started");
+
         try {
+
             for (String messageReceived; (messageReceived = in.readLine()) != null;) {
+
                 System.out.println(messageReceived);
-                if ((!messageReceived.startsWith("{") || !messageReceived.endsWith("}")) && !messageReceived.startsWith("CREATE")) {
+
+                if ((!messageReceived.startsWith("{") || !messageReceived.endsWith("}"))
+                        && !messageReceived.startsWith("CREATE")) {
+
                     out.println("Message formating error");
                     clientSocket.close();
-                } else if(messageReceived.startsWith("{") && messageReceived.endsWith("}")){
+
+                } else if (messageReceived.startsWith("{") && messageReceived.endsWith("}")) {
+
                     messageReceived = messageReceived.substring(1, messageReceived.length() - 1);
                     reqReceived = messageReceived.split(",");
                     LanguageServer receivingServer = findLanguageServer(reqReceived[1]);
+
                     if (receivingServer != null) {
+
                         out.println("SUCCESS");
+
                         ProxyServerRequestClient client = new ProxyServerRequestClient();
                         String messageToSend = "{" + reqReceived[0] + ","
                                 + clientSocket.getInetAddress().getHostAddress()
                                 + "," + reqReceived[2] + "}";
+
                         client.connect(InetAddress.getLocalHost().getHostAddress(), receivingServer.getListeningPort());
                         client.sendMessage(messageToSend);
                         client.disconnect();
 
                     } else {
+
                         out.println("ERROR no such dictionary");
+                    
                     }
-                }else{
-                    String pathToSource = messageReceived.substring(messageReceived.lastIndexOf("CREATE ", 0), messageReceived.length());
+                } else {
+
+                    String pathToSource = messageReceived.split(" ")[1];
                     int port = ServerProxy.getCurrentLangServerPort();
                     languages.add(new LanguageServer(new ServerSocket(port++), new LanguageDictionary(pathToSource)));
+
+                    new Thread(languages.getLast(),
+                            "Language Server " + languages.getLast().getLanguageDictionaryLanguage()).start();
+
                     ServerProxy.incrementCurrentLangServerPort();
+
+                    out.println("SUCCESS");
                 }
             }
 
@@ -81,7 +103,6 @@ public class ClientHandlerProxy implements Runnable {
                 throw new RuntimeException(e);
             }
         }
-
     }
 
     private LanguageServer findLanguageServer(String language) {

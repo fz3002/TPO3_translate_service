@@ -75,16 +75,17 @@ public class MainClient implements Client {
 
         MainClient client = new MainClient();
 
-        try {
+        while (true) {
+            try {
 
-            InetAddress address = InetAddress.getLocalHost();
-            System.out.println(address.getHostAddress());
+                InetAddress address = InetAddress.getLocalHost();
 
-            // Sending Request and showing answer
-            while (true) {
+                // Sending Request and showing answer
+
+                System.out.println("test");
 
                 boolean sendReq = client.gui.newInputAvailable();
-                
+
                 // TRANSLATION REQUEST
 
                 if (sendReq) {
@@ -92,14 +93,14 @@ public class MainClient implements Client {
                     ListenerServer server = new ListenerServer();
                     new Thread(server).start();
 
-                    int LISTENINGPORT = random.nextInt(1025,65535);
+                    int LISTENINGPORT = random.nextInt(1025, 65535);
 
                     ServerSocket serverSocket = new ServerSocket(LISTENINGPORT);
 
                     server.setSocket(serverSocket);
 
                     System.out.println("================================================================");
-                    
+
                     String[] userInput = client.gui.getUserInput();
                     String message = "{" + userInput[0] + "," + userInput[1] + "," + LISTENINGPORT + "}";
 
@@ -121,7 +122,7 @@ public class MainClient implements Client {
 
                     // RESPONSE FROM LANGUAGE SERVER HANDLING
 
-                    String receivedAnswer = server.received.getValue(); 
+                    String receivedAnswer = server.received.getValue();
                     while (receivedAnswer == null) {
                         receivedAnswer = server.received.getValue();
                     }
@@ -133,32 +134,31 @@ public class MainClient implements Client {
                         continue;
                     }
 
-                    client.gui.getLabel().setText("Answer: " + receivedAnswer); //Displaying answer
+                    client.gui.getLabel().setText("Answer: " + receivedAnswer); // Displaying answer
                     receivedAnswer = null;
                     server.received.setValue(null);
                     server.setSocket(null);
-                    
+
                 }
 
                 // ADD NEW SERVER REQUEST
-                // TODO
-                if (client.gui.newServerCreationRequest){
+                if (client.gui.newServerCreationRequest) {
                     System.out.println("test add new server request");
                     String pathToSource = client.gui.getPathToSource();
-                    if (client.validateSource(pathToSource)){
+                    if (client.validateSource(pathToSource)) {
                         client.connect(address.getHostAddress(), SENDPORT);
                         client.sendMessage(new String("CREATE, " + pathToSource));
                         client.gui.showPopUp(client.responseFromProxyServer);
                         client.disconnect();
 
-                    }else {
+                    } else {
                         client.gui.showPopUp("File is not a valid source for new Language Server");
                     }
                 }
-            }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                client.gui.showPopUp(e.toString());
+            }
         }
     }
 
