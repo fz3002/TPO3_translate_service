@@ -11,7 +11,6 @@ import com.example.Interfaces.Server;
 public class LanguageServer implements Server, Runnable {
     private LanguageDictionary ld = null;
     private ServerSocket serverSocket = null;
-    private static int port = 2137;
 
     public LanguageServer(ServerSocket serverSocket, LanguageDictionary ld) {
         this.serverSocket = serverSocket;

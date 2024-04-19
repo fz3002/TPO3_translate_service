@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -34,7 +35,9 @@ public class MainClient implements Client {
     }
 
     public void connect(String host, int port) throws UnknownHostException, IOException {
-        socket = new Socket(host, port);
+        socket = new Socket();
+        socket.connect(new InetSocketAddress(host, port), 2000);
+        socket.setSoTimeout(2000);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("Connected to " + socket.getInetAddress());
@@ -65,7 +68,6 @@ public class MainClient implements Client {
                         return matcher.matches();
                     });
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return linesMatch;
@@ -81,8 +83,6 @@ public class MainClient implements Client {
                 InetAddress address = InetAddress.getLocalHost();
 
                 // Sending Request and showing answer
-
-                System.out.println("test");
 
                 boolean sendReq = client.gui.newInputAvailable();
 
@@ -106,8 +106,6 @@ public class MainClient implements Client {
 
                     client.connect(address.getHostAddress(), SENDPORT); // Start connection to Proxy server
                     // TODO: Add timeout handling
-                    // TODO: Add feature adding new langugae server in gui
-                    // TODO: Chceck for errors in messeges
                     client.sendMessage(message); // Send message with request for transtaltion to proxy server
 
                     System.out.println(client.responseFromProxyServer);
